@@ -16,3 +16,11 @@ void test_NoChangeToLightsDuringInitialization(void)
     TEST_ASSERT_EQUAL(LIGHT_ID_UNKNOWN,LightControllerSpy_GetLastID());
     TEST_ASSERT_EQUAL(LIGHT_STATE_UNKNOWN,LightControllerSpy_GetLastState());
 }
+
+void test_RememberTheLastLightIDControlled(void)
+{
+    LightController_On(10);
+
+    TEST_ASSERT_EQUAL(10, LightControllerSpy_GetLastID());
+    TEST_ASSERT_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
+}

@@ -18,3 +18,9 @@ int LightControllerSpy_GetLastState(void)
 {
 	return lastState;
 }
+
+void LightController_On(int id)
+{
+	lastID = id;
+	lastState = LIGHT_ON;
+}
