@@ -78,3 +78,21 @@ void test_ScheduleOffEveryday_ItsTime(void)
 
     LightScheduler_WakeUp();
 }
+
+void test_ScheduleTuesdayButItsMonday(void)
+{
+    LightScheduler_ScheduleTurnOn(3, TUESDAY, 1200);
+    setTimeTo(MONDAY,1200);
+
+    LightScheduler_WakeUp();
+}
+
+void test_ScheduleTuesdayAndItsTuesday(void)
+{
+    LightScheduler_ScheduleTurnOn(3, TUESDAY, 1200);
+    setTimeTo(TUESDAY, 1200);
+
+    LightController_On_Expect(3);
+
+    LightScheduler_WakeUp();
+}
