@@ -4,9 +4,15 @@
 
 #define UNUSED -1
 
+enum {
+	TURN_OFF = 0,
+	TURN_ON = 1
+};
+
 typedef struct {
 	int id;
 	int minuteOfDay;
+	int event;
 } ScheduledLightEvent;
 
 static ScheduledLightEvent scheduledEvent;
@@ -30,12 +36,23 @@ void LightScheduler_WakeUp(void)
 	return;
 	if(time.minuteOfDay != scheduledEvent.minuteOfDay)
 	return;
-
-	LightController_On(scheduledEvent.id);
+	if(scheduledEvent.event == TURN_ON) {
+		LightController_On(scheduledEvent.id);
+	} else if(scheduledEvent.event == TURN_OFF) {
+		LightController_Off(scheduledEvent.id);
+	}
 }
 
 void LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay)
 {
 	scheduledEvent.id = lightID;
 	scheduledEvent.minuteOfDay = minuteOfDay;
+	scheduledEvent.event = TURN_ON;
+}
+
+void LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay)
+{
+	scheduledEvent.id = lightID;
+	scheduledEvent.minuteOfDay = minuteOfDay;
+	scheduledEvent.event = TURN_OFF;
 }

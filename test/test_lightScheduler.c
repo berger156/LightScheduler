@@ -65,3 +65,15 @@ void test_ScheduleOnEveryday_ItsTime(void)
 
     LightScheduler_WakeUp();
 }
+
+void test_ScheduleOffEveryday_ItsTime(void)
+{
+    LightScheduler_ScheduleTurnOff(3, EVERYDAY, 1200);
+    // schedule light 3 to turn on everyday at 8 pm = 20:00 hrs = 1200 min
+    FakeTimeService_SetDay(MONDAY);
+    FakeTimeService_SetMinute(1200);
+
+    LightController_Off_Expect(3);
+
+    LightScheduler_WakeUp();
+}
