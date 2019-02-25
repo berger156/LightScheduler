@@ -9,6 +9,11 @@ void LightController_Create(void)
 	lastState = LIGHT_STATE_UNKNOWN;
 }
 
+void LightController_Destroy(void)
+{
+	// what should this do that isn't handled by Create() on setUp?
+}
+
 int LightControllerSpy_GetLastID(void)
 {
 	return lastID;
