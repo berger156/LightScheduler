@@ -111,6 +111,24 @@ void test_ScheduleWeekend_AndItsSaturday(void)
     setTimeTo(SATURDAY,1200);
 
     LightController_On_Expect(3);
-    
+
+    LightScheduler_WakeUp();
+}
+
+void test_ScheduleWeekend_AndItSunday(void)
+{
+    LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+    setTimeTo(SUNDAY,1200);
+
+    LightController_On_Expect(3);
+
+    LightScheduler_WakeUp();
+}
+
+void test_ScheduleWeekend_ButItsMonday(void)
+{
+    LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+    setTimeTo(MONDAY,1200);
+
     LightScheduler_WakeUp();
 }
