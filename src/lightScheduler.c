@@ -17,6 +17,14 @@ typedef struct {
 
 static ScheduledLightEvent scheduledEvent;
 
+/* static helper functions */
+static void scheduleEvent(int id, int day, int minuteOfDay, int event)
+{
+	scheduledEvent.id = id;
+	scheduledEvent.minuteOfDay = minuteOfDay;
+	scheduledEvent.event = event;
+}
+
 void LightScheduler_Create(void)
 {
 	scheduledEvent.id = UNUSED;
@@ -45,14 +53,10 @@ void LightScheduler_WakeUp(void)
 
 void LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay)
 {
-	scheduledEvent.id = lightID;
-	scheduledEvent.minuteOfDay = minuteOfDay;
-	scheduledEvent.event = TURN_ON;
+	scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_ON);
 }
 
 void LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay)
 {
-	scheduledEvent.id = lightID;
-	scheduledEvent.minuteOfDay = minuteOfDay;
-	scheduledEvent.event = TURN_OFF;
+	scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_OFF);
 }
