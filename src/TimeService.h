@@ -9,6 +9,6 @@ typedef struct Time
 
 void TimeService_Create(void);
 void TimeService_Destroy(void);
-void TimeService_GetTime(void);
+void TimeService_GetTime(Time *time);
 
 #endif /* TIMESERVICE_H */

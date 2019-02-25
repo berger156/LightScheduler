@@ -1,13 +1,12 @@
 #include "unity.h"
 #include "lightScheduler.h"
 #include "LightControllerSpy.h"
-#include "mock_TimeService.h"
-
-Time time;
+#include "FakeTimeService.h"
 
 void setUp(void)
 {
     LightController_Create();
+    TimeService_Create();
 }
 
 void tearDown(void)
@@ -28,6 +27,24 @@ void test_RememberTheLastLightIDControlled(void)
 
     TEST_ASSERT_EQUAL(10, LightControllerSpy_GetLastID());
     TEST_ASSERT_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
+}
+
+/* Tests to verify FakeTimeService */
+void test_unsetTime(void)
+{
+    Time time;  // why is this a local variable?
+    TimeService_GetTime(&time);
+    TEST_ASSERT_EQUAL(TIME_UNKNOWN, time.minuteOfDay);
+}
+
+void test_setTime(void)
+{
+    Time time;
+    FakeTimeService_SetMinute(42);
+    FakeTimeService_SetDay(SATURDAY);
+    TimeService_GetTime(&time);
+    TEST_ASSERT_EQUAL(42, time.minuteOfDay);
+    TEST_ASSERT_EQUAL(SATURDAY, time.dayOfWeek);
 }
 
 /*
