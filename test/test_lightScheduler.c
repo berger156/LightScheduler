@@ -65,7 +65,22 @@ void test_ScheduleOnEveryday_NotTimeYet(void)
     // schedule light 3 to turn on everyday at 8 pm = 20:00 hrs = 1200 min
     FakeTimeService_SetDay(MONDAY);
     FakeTimeService_SetMinute(1199);
+
     LightScheduler_WakeUp();
+
     TEST_ASSERT_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastID());
     TEST_ASSERT_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+}
+
+void test_ScheduleOnEveryday_ItsTime(void)
+{
+    LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
+    // schedule light 3 to turn on everyday at 8 pm = 20:00 hrs = 1200 min
+    FakeTimeService_SetDay(MONDAY);
+    FakeTimeService_SetMinute(1200);
+
+    LightScheduler_WakeUp();
+
+    TEST_ASSERT_EQUAL(3, LightControllerSpy_GetLastID());
+    TEST_ASSERT_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
 }
