@@ -1,11 +1,10 @@
 #include "unity.h"
 #include "lightScheduler.h"
-#include "LightControllerSpy.h"
+#include "mock_LightController.h"
 #include "FakeTimeService.h"
 
 void setUp(void)
 {
-    LightController_Create();
     TimeService_Create();
     LightScheduler_Create();
 }
@@ -13,22 +12,6 @@ void setUp(void)
 void tearDown(void)
 {
     LightScheduler_Destroy();
-    LightController_Destroy();
-}
-
-/* Tests to verify LightControllerSpy */
-void test_NoChangeToLightsDuringInitialization(void)
-{
-    TEST_ASSERT_EQUAL(LIGHT_ID_UNKNOWN,LightControllerSpy_GetLastID());
-    TEST_ASSERT_EQUAL(LIGHT_STATE_UNKNOWN,LightControllerSpy_GetLastState());
-}
-
-void test_RememberTheLastLightIDControlled(void)
-{
-    LightController_On(10);
-
-    TEST_ASSERT_EQUAL(10, LightControllerSpy_GetLastID());
-    TEST_ASSERT_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
 }
 
 /* Tests to verify FakeTimeService */
@@ -55,8 +38,8 @@ void test_NoScheduleNothingHappens(void)
     FakeTimeService_SetDay(MONDAY);
     FakeTimeService_SetMinute(100);
     LightScheduler_WakeUp();
-    TEST_ASSERT_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastID());
-    TEST_ASSERT_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+
+    /* no expected calls to LightController */
 }
 
 void test_ScheduleOnEveryday_NotTimeYet(void)
@@ -68,8 +51,7 @@ void test_ScheduleOnEveryday_NotTimeYet(void)
 
     LightScheduler_WakeUp();
 
-    TEST_ASSERT_EQUAL(LIGHT_ID_UNKNOWN, LightControllerSpy_GetLastID());
-    TEST_ASSERT_EQUAL(LIGHT_STATE_UNKNOWN, LightControllerSpy_GetLastState());
+    /* no expected calls to LightController */
 }
 
 void test_ScheduleOnEveryday_ItsTime(void)
@@ -79,8 +61,7 @@ void test_ScheduleOnEveryday_ItsTime(void)
     FakeTimeService_SetDay(MONDAY);
     FakeTimeService_SetMinute(1200);
 
-    LightScheduler_WakeUp();
+    LightController_On_Expect(3);
 
-    TEST_ASSERT_EQUAL(3, LightControllerSpy_GetLastID());
-    TEST_ASSERT_EQUAL(LIGHT_ON, LightControllerSpy_GetLastState());
+    LightScheduler_WakeUp();
 }
