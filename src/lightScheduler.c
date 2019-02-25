@@ -1,6 +1,7 @@
 #include "lightScheduler.h"
 #include "TimeService.h"
 #include "LightController.h"
+#include "common.h"
 
 #define UNUSED -1
 
@@ -36,19 +37,31 @@ static void operateLight(ScheduledLightEvent *lightEvent)
 	}
 }
 
+static int DoesLightRespondToday(int today, int reactionDay)
+{
+	if(reactionDay == EVERYDAY)
+		return TRUE;
+	if(reactionDay == today)
+		return TRUE;
+	if(reactionDay == WEEKEND && (today == SATURDAY || today == SUNDAY))
+		return TRUE;
+	return FALSE;
+}
+
 static void processEvent(Time *time, ScheduledLightEvent *lightEvent)
 {
-	int reactionDay = lightEvent->dayOfWeek;
 
 	if(lightEvent->id == UNUSED)
 	return;
-	if(reactionDay != EVERYDAY && reactionDay != time->dayOfWeek)
+	if(!DoesLightRespondToday(time->dayOfWeek, lightEvent->dayOfWeek))
 	return;
 	if(time->minuteOfDay != lightEvent->minuteOfDay)
 	return;
 
 	operateLight(lightEvent);
 }
+
+/* Public API Functions */
 
 void LightScheduler_Create(void)
 {

@@ -79,7 +79,7 @@ void test_ScheduleOffEveryday_ItsTime(void)
     LightScheduler_WakeUp();
 }
 
-void test_ScheduleTuesdayButItsMonday(void)
+void test_ScheduleTuesday_ButItsMonday(void)
 {
     LightScheduler_ScheduleTurnOn(3, TUESDAY, 1200);
     setTimeTo(MONDAY,1200);
@@ -87,12 +87,30 @@ void test_ScheduleTuesdayButItsMonday(void)
     LightScheduler_WakeUp();
 }
 
-void test_ScheduleTuesdayAndItsTuesday(void)
+void test_ScheduleTuesday_AndItsTuesday(void)
 {
     LightScheduler_ScheduleTurnOn(3, TUESDAY, 1200);
     setTimeTo(TUESDAY, 1200);
 
     LightController_On_Expect(3);
 
+    LightScheduler_WakeUp();
+}
+
+void test_ScheduleWeekend_ButItsFriday(void)
+{
+    LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+    setTimeTo(FRIDAY,1200);
+
+    LightScheduler_WakeUp();
+}
+
+void test_ScheduleWeekend_AndItsSaturday(void)
+{
+    LightScheduler_ScheduleTurnOn(3, WEEKEND, 1200);
+    setTimeTo(SATURDAY,1200);
+
+    LightController_On_Expect(3);
+    
     LightScheduler_WakeUp();
 }
