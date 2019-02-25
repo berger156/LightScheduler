@@ -14,6 +14,13 @@ void tearDown(void)
     LightScheduler_Destroy();
 }
 
+/* helper functions for unit tests */
+void setTimeTo(int dayOfWeek, int minuteOfDay)
+{
+    FakeTimeService_SetDay(dayOfWeek);
+    FakeTimeService_SetMinute(minuteOfDay);
+}
+
 /* Tests to verify FakeTimeService */
 void test_unsetTime(void)
 {
@@ -35,8 +42,7 @@ void test_setTime(void)
 /* Unit Tests for LightScheduler */
 void test_NoScheduleNothingHappens(void)
 {
-    FakeTimeService_SetDay(MONDAY);
-    FakeTimeService_SetMinute(100);
+    setTimeTo(MONDAY,100);
     LightScheduler_WakeUp();
 
     /* no expected calls to LightController */
@@ -44,10 +50,9 @@ void test_NoScheduleNothingHappens(void)
 
 void test_ScheduleOnEveryday_NotTimeYet(void)
 {
-    LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
     // schedule light 3 to turn on everyday at 8 pm = 20:00 hrs = 1200 min
-    FakeTimeService_SetDay(MONDAY);
-    FakeTimeService_SetMinute(1199);
+    LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
+    setTimeTo(MONDAY,1199);
 
     LightScheduler_WakeUp();
 
@@ -57,9 +62,7 @@ void test_ScheduleOnEveryday_NotTimeYet(void)
 void test_ScheduleOnEveryday_ItsTime(void)
 {
     LightScheduler_ScheduleTurnOn(3, EVERYDAY, 1200);
-    // schedule light 3 to turn on everyday at 8 pm = 20:00 hrs = 1200 min
-    FakeTimeService_SetDay(MONDAY);
-    FakeTimeService_SetMinute(1200);
+    setTimeTo(MONDAY,1200);
 
     LightController_On_Expect(3);
 
@@ -69,9 +72,7 @@ void test_ScheduleOnEveryday_ItsTime(void)
 void test_ScheduleOffEveryday_ItsTime(void)
 {
     LightScheduler_ScheduleTurnOff(3, EVERYDAY, 1200);
-    // schedule light 3 to turn on everyday at 8 pm = 20:00 hrs = 1200 min
-    FakeTimeService_SetDay(MONDAY);
-    FakeTimeService_SetMinute(1200);
+    setTimeTo(MONDAY,1200);
 
     LightController_Off_Expect(3);
 
