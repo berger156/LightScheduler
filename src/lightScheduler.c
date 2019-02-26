@@ -69,18 +69,18 @@ void LightScheduler_Create(void)
 {
 	scheduledEvent.id = UNUSED;
 
-	TimeService_SetPeriodicAlarmInSeconds(60, LightScheduler_WakeUp);
+	//TimeService_SetPeriodicAlarmInSeconds(60, LightScheduler_WakeUp);
 }
 
 void LightScheduler_Destroy(void)
 {
-	TimeService_CancelPeriodicAlarmInSeconds(60, LightScheduler_WakeUp);
+	//TimeService_CancelPeriodicAlarmInSeconds(60, LightScheduler_WakeUp);
 }
 
 void LightScheduler_WakeUp(void)
 {
 	Time time;
-	time = TimeService_GetTime();
+	TimeService_GetTime(&time);
 
 	processEvent(&time, &scheduledEvent);
 }

@@ -9,7 +9,7 @@ typedef struct Time
 
 void TimeService_Create(void);
 void TimeService_Destroy(void);
-Time TimeService_GetTime(void);
+void TimeService_GetTime(Time * time);
 
 typedef void (*WakeUpCallback)(void);
 // a variable type which is a pointer to a function that takes no parameters

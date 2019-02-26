@@ -3,10 +3,26 @@
 #include "mock_LightController.h"
 #include "mock_TimeService.h"
 
+Time simulatedClock = {.dayOfWeek = -1, .minuteOfDay = -1};
+
+/* helper functions for unit tests */
+static void setTimeTo(int dayOfWeek, int minuteOfDay)
+{
+    simulatedClock.dayOfWeek = dayOfWeek;
+    simulatedClock.minuteOfDay = minuteOfDay;
+}
+
+static void getCurrentTime(Time *time, int num_calls)
+{
+    time->dayOfWeek = simulatedClock.dayOfWeek;
+    time->minuteOfDay = simulatedClock.minuteOfDay;
+}
+
 void setUp(void)
 {
-    TimeService_Create();
     LightScheduler_Create();
+    // setup TimeService_GetTime to always use getCurrentTime:
+    TimeService_GetTime_StubWithCallback(getCurrentTime);
 }
 
 void tearDown(void)
@@ -14,34 +30,24 @@ void tearDown(void)
     LightScheduler_Destroy();
 }
 
-/* helper functions for unit tests */
-void setTimeTo(int dayOfWeek, int minuteOfDay)
-{
-    Time setTime;
-    setTime.minuteOfDay = minuteOfDay;
-    setTime.dayOfWeek = dayOfWeek;
-    TimeService_GetTime_ExpectAndReturn(setTime);
-}
+/* Tests to verify simulatedClock */
 
-/* Tests to verify FakeTimeService */
-/*
 void test_unsetTime(void)
 {
-    Time time;  // why is this a local variable?
     TimeService_GetTime(&time);
-    TEST_ASSERT_EQUAL(TIME_UNKNOWN, time.minuteOfDay);
+    TEST_ASSERT_EQUAL(-1, time.minuteOfDay);
+    TEST_ASSERT_EQUAL(-1, time.dayOfWeek);
 }
+
 
 void test_setTime(void)
 {
     Time time;
-    FakeTimeService_SetMinute(42);
-    FakeTimeService_SetDay(SATURDAY);
+    setTimeTo(SATURDAY,42);
     TimeService_GetTime(&time);
     TEST_ASSERT_EQUAL(42, time.minuteOfDay);
     TEST_ASSERT_EQUAL(SATURDAY, time.dayOfWeek);
 }
-*/
 
 /* Unit Tests for LightScheduler */
 void test_NoScheduleNothingHappens(void)
@@ -154,18 +160,3 @@ void test_ScheduleWeekday_ButItsSunday(void)
 
     LightScheduler_WakeUp();
 }
-
-/*
-void test_CreateScheduler_StartsOneMinuteAlarmWithCallback(void)
-{
-    TEST_ASSERT_EQUAL(60, FakeTimeService_GetAlarmPeriod());
-    TEST_ASSERT_EQUAL_PTR(LightScheduler_WakeUp, FakeTimeService_GetAlarmCallback());
-}
-
-void test_DestroyScheduler_CancelsOneMinuteAlarm(void)
-{
-    LightScheduler_Destroy();
-
-    TEST_ASSERT_EQUAL_PTR(NULL, FakeTimeService_GetAlarmCallback());
-}
-*/
