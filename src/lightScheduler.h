@@ -14,5 +14,6 @@ void LightScheduler_Destroy(void);
 void LightScheduler_WakeUp(void);
 int LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay);
 int LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay);
+void LightScheduler_RemoveEvent(int lightID, int dayOfWeek, int minuteOfDay);
 
 #endif // _LIGHTSCHEDULER_H

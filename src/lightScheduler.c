@@ -37,6 +37,20 @@ static int scheduleEvent(int id, int dayOfWeek, int minuteOfDay, int event)
 	return LS_TOO_MANY_EVENTS;
 }
 
+static void unscheduleEvent(int id, int dayOfWeek, int minuteOfDay)
+{
+	for(int i=0; i<MAX_EVENTS; i++) {
+		if(scheduledEvents[i].id == id) {
+			if(scheduledEvents[i].dayOfWeek == dayOfWeek) {
+				if(scheduledEvents[i].minuteOfDay == minuteOfDay) {
+					scheduledEvents[i].id = UNUSED;
+					break;
+				}
+			}
+		}
+	}
+}
+
 static void operateLight(ScheduledLightEvent *lightEvent)
 {
 	if(lightEvent->event == TURN_ON) {
@@ -106,4 +120,9 @@ int LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay)
 int LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay)
 {
 	return scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_OFF);
+}
+
+void LightScheduler_RemoveEvent(int lightID, int dayOfWeek, int minuteOfDay)
+{
+	unscheduleEvent(lightID, dayOfWeek, minuteOfDay);
 }

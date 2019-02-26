@@ -193,3 +193,29 @@ void test_Scheduler_RejectsTooManyEvents(void)
     TEST_ASSERT_EQUAL(LS_TOO_MANY_EVENTS,
         LightScheduler_ScheduleTurnOn(6, MONDAY, 600));
 }
+
+void test_Remove_RecyclesAScheduledSlot(void)
+{
+    // 1. fill up all the event slots
+    for(int i=0; i<128; i++) {
+        TEST_ASSERT_EQUAL(LS_OK,
+            LightScheduler_ScheduleTurnOn(6, MONDAY, 600+i));
+    }
+
+    LightScheduler_RemoveEvent(6, MONDAY, 600);
+
+    TEST_ASSERT_EQUAL(LS_OK,
+        LightScheduler_ScheduleTurnOn(13, MONDAY, 1000));
+}
+
+void test_MakeSureRightEventIsRemoved(void)
+{
+    LightScheduler_ScheduleTurnOn(6, MONDAY, 600);
+    LightScheduler_ScheduleTurnOn(7, MONDAY, 600);
+    LightScheduler_RemoveEvent(6, MONDAY, 600);
+
+    setTimeTo(MONDAY, 600);
+
+    LightController_On_Expect(7);
+    LightScheduler_WakeUp();
+}
