@@ -20,6 +20,7 @@ static void getCurrentTime(Time *time, int num_calls)
 
 void setUp(void)
 {
+    TimeService_SetPeriodicAlarmInSeconds_Expect(60,LightScheduler_WakeUp);
     LightScheduler_Create();
     // setup TimeService_GetTime to always use getCurrentTime:
     TimeService_GetTime_StubWithCallback(getCurrentTime);
@@ -27,13 +28,14 @@ void setUp(void)
 
 void tearDown(void)
 {
+    TimeService_CancelPeriodicAlarmInSeconds_Expect(60,LightScheduler_WakeUp);
     LightScheduler_Destroy();
 }
 
 /* Tests to verify simulatedClock */
-
 void test_unsetTime(void)
 {
+    Time time;
     TimeService_GetTime(&time);
     TEST_ASSERT_EQUAL(-1, time.minuteOfDay);
     TEST_ASSERT_EQUAL(-1, time.dayOfWeek);
