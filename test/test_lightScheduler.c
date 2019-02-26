@@ -150,3 +150,16 @@ void test_ScheduleWeekday_ButItsSunday(void)
 
     LightScheduler_WakeUp();
 }
+
+void test_CreateScheduler_StartsOneMinuteAlarmWithCallback(void)
+{
+    TEST_ASSERT_EQUAL(60, FakeTimeService_GetAlarmPeriod());
+    TEST_ASSERT_EQUAL_PTR(LightScheduler_WakeUp, FakeTimeService_GetAlarmCallback());
+}
+
+void test_DestroyScheduler_CancelsOneMinuteAlarm(void)
+{
+    LightScheduler_Destroy();
+
+    TEST_ASSERT_EQUAL_PTR(NULL, FakeTimeService_GetAlarmCallback());
+}

@@ -11,4 +11,11 @@ void TimeService_Create(void);
 void TimeService_Destroy(void);
 void TimeService_GetTime(Time *time);
 
+typedef void (*WakeUpCallback)(void);
+// a variable type which is a pointer to a function that takes no parameters
+// and returns no parameters
+
+void TimeService_SetPeriodicAlarmInSeconds(int seconds, WakeUpCallback fun);
+void TimeService_CancelPeriodicAlarmInSeconds(int seconds, WakeUpCallback fun);
+
 #endif /* TIMESERVICE_H */
