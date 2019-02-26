@@ -37,6 +37,8 @@ void test_unsetTime(void)
 {
     Time time;
     TimeService_GetTime(&time);
+
+    // if setTimeTo() has not been called, simulatedClock is uninitialized
     TEST_ASSERT_EQUAL(-1, time.minuteOfDay);
     TEST_ASSERT_EQUAL(-1, time.dayOfWeek);
 }
