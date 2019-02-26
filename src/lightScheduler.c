@@ -23,6 +23,10 @@ static ScheduledLightEvent scheduledEvents[MAX_EVENTS];
 /* static helper functions */
 static int scheduleEvent(int id, int dayOfWeek, int minuteOfDay, int event)
 {
+	if(id < 0 || id >= MAX_LIGHTS) {
+		return LS_ID_OUT_OF_BOUNDS;
+	}
+
 	for(int i=0; i<MAX_EVENTS; i++) {
 	// search for an UNUSED location to store this event
 		if(scheduledEvents[i].id == UNUSED) {

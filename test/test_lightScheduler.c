@@ -219,3 +219,21 @@ void test_MakeSureRightEventIsRemoved(void)
     LightController_On_Expect(7);
     LightScheduler_WakeUp();
 }
+
+void test_Scheduler_AcceptsValidLights(void)
+{
+    TEST_ASSERT_EQUAL(LS_OK,
+        LightScheduler_ScheduleTurnOn(0, MONDAY, 600));
+    TEST_ASSERT_EQUAL(LS_OK,
+        LightScheduler_ScheduleTurnOn(15, MONDAY, 600));
+    TEST_ASSERT_EQUAL(LS_OK,
+        LightScheduler_ScheduleTurnOn(31, MONDAY, 600));
+}
+
+void test_Scheduler_RejectsInvalidLights(void)
+{
+    TEST_ASSERT_EQUAL(LS_ID_OUT_OF_BOUNDS,
+        LightScheduler_ScheduleTurnOn(32, MONDAY, 600));
+    TEST_ASSERT_EQUAL(LS_ID_OUT_OF_BOUNDS,
+        LightScheduler_ScheduleTurnOn(-1, MONDAY, 600));
+}
