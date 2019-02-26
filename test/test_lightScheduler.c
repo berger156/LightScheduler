@@ -164,3 +164,19 @@ void test_ScheduleWeekday_ButItsSunday(void)
 
     LightScheduler_WakeUp();
 }
+
+/* Add support for multiple events */
+void test_ScheduleTwoEventsAtTheSameTime(void)
+{
+    LightScheduler_ScheduleTurnOn(3, SUNDAY, 1200);
+    LightScheduler_ScheduleTurnOn(12, SUNDAY, 1200);
+    setTimeTo(SUNDAY, 1200);
+
+    LightController_On_Expect(3);
+    LightController_On_Expect(12);
+    /* NOTE: Using LightController_On_Expect is different than using a spy,
+    because a spy can monitor the *state* of of the light, which is slightly
+    different than "was it turned ON during this test?" */
+
+    LightScheduler_WakeUp();
+}

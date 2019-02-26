@@ -4,6 +4,7 @@
 #include "common.h"
 
 #define UNUSED -1
+#define MAX_EVENTS 128
 
 enum {
 	TURN_OFF = 0,
@@ -17,15 +18,21 @@ typedef struct {
 	int event;
 } ScheduledLightEvent;
 
-static ScheduledLightEvent scheduledEvent;
+static ScheduledLightEvent scheduledEvents[MAX_EVENTS];
 
 /* static helper functions */
 static void scheduleEvent(int id, int dayOfWeek, int minuteOfDay, int event)
 {
-	scheduledEvent.id = id;
-	scheduledEvent.minuteOfDay = minuteOfDay;
-	scheduledEvent.dayOfWeek = dayOfWeek;
-	scheduledEvent.event = event;
+	for(int i=0; i<MAX_EVENTS; i++) {
+	// search for an UNUSED location to store this event
+		if(scheduledEvents[i].id == UNUSED) {
+			scheduledEvents[i].id = id;
+			scheduledEvents[i].minuteOfDay = minuteOfDay;
+			scheduledEvents[i].dayOfWeek = dayOfWeek;
+			scheduledEvents[i].event = event;
+			break;
+		}
+	}
 }
 
 static void operateLight(ScheduledLightEvent *lightEvent)
@@ -67,7 +74,9 @@ static void processEvent(Time *time, ScheduledLightEvent *lightEvent)
 
 void LightScheduler_Create(void)
 {
-	scheduledEvent.id = UNUSED;
+	for(int i=0; i<MAX_EVENTS; i++) {
+		scheduledEvents[i].id = UNUSED;
+	}
 
 	TimeService_SetPeriodicAlarmInSeconds(60, LightScheduler_WakeUp);
 }
@@ -82,7 +91,9 @@ void LightScheduler_WakeUp(void)
 	Time time;
 	TimeService_GetTime(&time);
 
-	processEvent(&time, &scheduledEvent);
+	for(int i=0; i<MAX_EVENTS; i++) {
+		processEvent(&time, &scheduledEvents[i]);
+	}
 }
 
 void LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay)
