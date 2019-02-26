@@ -80,7 +80,7 @@ void LightScheduler_Destroy(void)
 void LightScheduler_WakeUp(void)
 {
 	Time time;
-	TimeService_GetTime(&time);
+	time = TimeService_GetTime();
 
 	processEvent(&time, &scheduledEvent);
 }
