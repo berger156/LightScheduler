@@ -180,3 +180,16 @@ void test_ScheduleTwoEventsAtTheSameTime(void)
 
     LightScheduler_WakeUp();
 }
+
+void test_Scheduler_RejectsTooManyEvents(void)
+{
+    // 1. fill up all the event slots
+    for(int i=0; i<128; i++) {
+        TEST_ASSERT_EQUAL(LS_OK,
+            LightScheduler_ScheduleTurnOn(6, MONDAY, 600+i));
+    }
+
+    // 2. then do one more call:
+    TEST_ASSERT_EQUAL(LS_TOO_MANY_EVENTS,
+        LightScheduler_ScheduleTurnOn(6, MONDAY, 600));
+}

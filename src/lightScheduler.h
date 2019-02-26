@@ -7,10 +7,12 @@ typedef enum Day {
 	EVERYDAY = 10, WEEKDAY, WEEKEND
 } Day;
 
+enum { LS_OK, LS_TOO_MANY_EVENTS };
+
 void LightScheduler_Create(void);
 void LightScheduler_Destroy(void);
 void LightScheduler_WakeUp(void);
-void LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay);
-void LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay);
+int LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay);
+int LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay);
 
 #endif // _LIGHTSCHEDULER_H

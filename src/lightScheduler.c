@@ -21,7 +21,7 @@ typedef struct {
 static ScheduledLightEvent scheduledEvents[MAX_EVENTS];
 
 /* static helper functions */
-static void scheduleEvent(int id, int dayOfWeek, int minuteOfDay, int event)
+static int scheduleEvent(int id, int dayOfWeek, int minuteOfDay, int event)
 {
 	for(int i=0; i<MAX_EVENTS; i++) {
 	// search for an UNUSED location to store this event
@@ -30,9 +30,11 @@ static void scheduleEvent(int id, int dayOfWeek, int minuteOfDay, int event)
 			scheduledEvents[i].minuteOfDay = minuteOfDay;
 			scheduledEvents[i].dayOfWeek = dayOfWeek;
 			scheduledEvents[i].event = event;
-			break;
+			return LS_OK;
 		}
 	}
+
+	return LS_TOO_MANY_EVENTS;
 }
 
 static void operateLight(ScheduledLightEvent *lightEvent)
@@ -96,12 +98,12 @@ void LightScheduler_WakeUp(void)
 	}
 }
 
-void LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay)
+int LightScheduler_ScheduleTurnOn(int lightID, int dayOfWeek, int minuteOfDay)
 {
-	scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_ON);
+	return scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_ON);
 }
 
-void LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay)
+int LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay)
 {
-	scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_OFF);
+	return scheduleEvent(lightID, dayOfWeek, minuteOfDay, TURN_OFF);
 }
