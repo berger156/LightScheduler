@@ -2,6 +2,7 @@
 #include "lightScheduler.h"
 #include "mock_LightController.h"
 #include "mock_TimeService.h"
+#include "mock_RandomMinute.h"
 
 Time simulatedClock = {.dayOfWeek = -1, .minuteOfDay = -1};
 
@@ -236,4 +237,15 @@ void test_Scheduler_RejectsInvalidLights(void)
         LightScheduler_ScheduleTurnOn(32, MONDAY, 600));
     TEST_ASSERT_EQUAL(LS_ID_OUT_OF_BOUNDS,
         LightScheduler_ScheduleTurnOn(-1, MONDAY, 600));
+}
+
+void test_LightSchedulerRandomize_TurnsOnEarly(void)
+{
+    LightScheduler_ScheduleTurnOn(4, EVERYDAY, 600);
+    RandomMinute_Get_ExpectAndReturn(-10);
+	LightScheduler_Randomize(4, EVERYDAY, 600);
+	setTimeTo(MONDAY, 600-10);
+
+	LightController_On_Expect(4);
+	LightScheduler_WakeUp();
 }

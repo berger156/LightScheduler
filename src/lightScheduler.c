@@ -1,6 +1,7 @@
 #include "lightScheduler.h"
 #include "TimeService.h"
 #include "LightController.h"
+#include "RandomMinute.h"
 #include "common.h"
 
 #define UNUSED -1
@@ -129,4 +130,18 @@ int LightScheduler_ScheduleTurnOff(int lightID, int dayOfWeek, int minuteOfDay)
 void LightScheduler_RemoveEvent(int lightID, int dayOfWeek, int minuteOfDay)
 {
 	unscheduleEvent(lightID, dayOfWeek, minuteOfDay);
+}
+
+void LightScheduler_Randomize(int lightID, int dayOfWeek, int minuteOfDay)
+{
+	for(int i=0; i<MAX_EVENTS; i++) {
+		if(scheduledEvents[i].id == lightID) {
+			if(scheduledEvents[i].dayOfWeek == dayOfWeek) {
+				if(scheduledEvents[i].minuteOfDay == minuteOfDay) {
+					scheduledEvents[i].minuteOfDay += RandomMinute_Get();
+					break;
+				}
+			}
+		}
+	}
 }
