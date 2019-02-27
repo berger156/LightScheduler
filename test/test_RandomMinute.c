@@ -31,6 +31,7 @@ void test_RandomMinute_IsInRange(void)
     ASSERT_WITHIN_RANGE(minute, -BOUND, BOUND);
 }
 
+
 void test_RandomMinute_AllValuesPossible(void)
 {
     int hitCount[2*BOUND + 1];
@@ -47,6 +48,9 @@ void test_RandomMinute_AllValuesPossible(void)
 
     char failMsg[20];
     for(i=0; i<2*BOUND + 1; i++) {
+        /* print out histogrammed data --------------------*/
+        //printf("hits at min %d = %d\n",i-BOUND,hitCount[i]);
+        /* ------------------------------------------------*/
         snprintf(failMsg,sizeof(failMsg),"no hits at min: %d",i-BOUND);
         TEST_ASSERT_MESSAGE(hitCount[i]>0,failMsg);
     }
